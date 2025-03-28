@@ -10,7 +10,7 @@ public class GatherItDbContext : DbContext
 
     public DbSet<JobAd> JobAds { get; set; }
     public DbSet<CompanyName> CompanyNames { get; set; }
-    public DbSet<Salary> Salarys { get; set; }
-    public DbSet<City> Citys { get; set; }
+    public DbSet<Salary> Salaries { get; set; }
+    public DbSet<City> Cities { get; set; }
     public DbSet<Company> Companies { get; set; }
 }

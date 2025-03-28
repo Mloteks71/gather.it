@@ -9,6 +9,6 @@ public class CityRepository(GatherItDbContext context) : ICityRepository
 
     public IEnumerable<City> GetCitys()
     {
-        return _context.Citys;
+        return _context.Cities;
     }
 }
