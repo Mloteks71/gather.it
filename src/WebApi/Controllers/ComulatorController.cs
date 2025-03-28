@@ -7,10 +7,9 @@ namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ComulatorController(IComulator comulator, /*ISiteRepository siteRepository,*/ IJobAdRepository jobAdRepository, ICityRepository cityRepository, ICompanyNameRepository companyNameRepository, IDocumentSimilarityService documentSimilarityService) : ControllerBase
+public class ComulatorController(IComulator comulator, IJobAdRepository jobAdRepository, ICityRepository cityRepository, ICompanyNameRepository companyNameRepository, IDocumentSimilarityService documentSimilarityService) : ControllerBase
 {
     private readonly IComulator _comulator = comulator;
-    //private readonly ISiteRepository _siteRepository = siteRepository;
     private readonly IJobAdRepository _jobAdRepository = jobAdRepository;
     private readonly ICityRepository _cityRepository = cityRepository;
     private readonly ICompanyNameRepository _companyNameRepository = companyNameRepository;

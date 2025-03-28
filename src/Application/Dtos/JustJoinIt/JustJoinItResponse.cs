@@ -35,7 +35,8 @@ public class JustJoinItResponse
         { "permanent", ContractType.UoP },
         { "B2B", ContractType.B2B },
         { "mandate_contract", ContractType.UZ },
-        { "any", ContractType.Any }
+        { "any", ContractType.Any },
+        { "internship", ContractType.Internship }
     };
 
     private static ContractType MapToContractType(string input)
