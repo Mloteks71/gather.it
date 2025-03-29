@@ -24,7 +24,9 @@ builder.Services.AddScoped<ICompanyNameRepository, CompanyNameRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 
 builder.Services.AddScoped<IDocumentSimilarityService, DocumentSimilarityService>();
-builder.Services.AddScoped<IComulator, Comulator>();
+builder.Services.AddScoped<IJobAdsService, JobAdsService>();
+builder.Services.AddScoped<IComulatorProvider, ComulatorProvider>();
+builder.Services.AddScoped<JustJoinItJobBoardComulator>();
 
 builder.Services.AddHttpClient<IJustJoinItJobBoardHttpClient, JustJoinItJobBoardHttpClient>();
 
