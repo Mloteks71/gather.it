@@ -17,10 +17,9 @@ public class JustJoinItJobBoardHttpClient : BaseJobBoardHttpClient, IJustJoinItJ
         httpClient.DefaultRequestHeaders.Add("Version", "2");
     }
 
-    public async Task<List<JobAd>> GetJobsAsync()
+    public async Task<List<JobAd>> GetJobsAsync(long page)
     {
-
-        HttpContent content = await base.GetJobsAsync("1");
+        HttpContent content = await base.GetJobsAsync(page.ToString());
 
         var test = await content.ReadAsStringAsync();
 
@@ -32,6 +31,5 @@ public class JustJoinItJobBoardHttpClient : BaseJobBoardHttpClient, IJustJoinItJ
         }
 
         return justJoinItResponse.CreateDtos();
-
     }
 }

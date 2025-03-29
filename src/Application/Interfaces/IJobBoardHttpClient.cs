@@ -3,5 +3,5 @@
 namespace Application.Interfaces;
 public interface IJobBoardHttpClient
 {
-    Task<List<JobAd>> GetJobsAsync();
+    Task<List<JobAd>> GetJobsAsync(long page);
 }
