@@ -26,10 +26,10 @@ public class ComulatorController(IComulator comulator, IJobAdRepository jobAdRep
 
         RemoveDuplicateJobAdsTempImplementation(jobAds, jobAdsFromDb);
 
-        IOrderedEnumerable<City> cities = _cityRepository.GetCitys().OrderBy(x => x.Name);
+        List<City> cities = _cityRepository.GetCitys().OrderBy(x => x.Name).ToList();
         IOrderedEnumerable<CompanyName?> companyNames = _companyNameRepository.GetCompanyNames().OrderBy(x => x!.Name); ;
 
-        StandarizeCities(jobAds, cities);
+        jobAds = StandarizeCities(jobAds, cities);
         StandarizeCompanyNames(jobAds, companyNames!);
 
         await _jobAdRepository.InsertJobAds(jobAds);
@@ -64,8 +64,7 @@ public class ComulatorController(IComulator comulator, IJobAdRepository jobAdRep
             {
                 if (companyName.Name == companyNameNameFromQueue)
                 {
-                    var companyNameFromJobAd = jobAdFromQueue!.CompanyName;
-                    companyNameFromJobAd = companyName;
+                    jobAdFromQueue!.CompanyName = companyName;
                 }
 
                 // w pętli, dopóki miasto się zgadza w priority queue
@@ -78,24 +77,19 @@ public class ComulatorController(IComulator comulator, IJobAdRepository jobAdRep
         }
     }
 
-    private static void StandarizeCities(List<JobAd> justJoinItJobs, IOrderedEnumerable<City> cities)
+    private static List<JobAd> StandarizeCities(List<JobAd> justJoinItJobs, List<City> cities)
     {
         PriorityQueue<JobAd, string> jobAdQueueForCities = new();
         jobAdQueueForCities.EnqueueRange(justJoinItJobs.Where(x => !(x.Cities ?? Enumerable.Empty<City>()).Contains(null)).SelectMany(jobAd => jobAd.Cities ?? Enumerable.Empty<City>(), (jobAd, city) => (jobAd, city.Name!)));
         //jobAdQueueForCities.EnqueueRange(justJoinItJobs.SelectMany(x => (x, x?.Cities?.Select(y => y.Name)), y => y)); - sprawdzić, czemu nie działa
         jobAdQueueForCities.TryDequeue(out JobAd? jobAdFromQueue, out string? cityNameFromQueue);
+        cities.AddRange(justJoinItJobs.SelectMany(x => x.Cities ?? Enumerable.Empty<City>()).Distinct().Where(x => !cities.Contains(x)));
         foreach (City city in cities)
         {
             while (cityNameFromQueue == city.Name)
             {
-
-                var cityFromJobAd = jobAdFromQueue?.Cities?.FirstOrDefault(x => x.Name == city.Name);
-                if (jobAdFromQueue?.Cities?.Where(x => x.Name == city.Name).Count() > 1)
-                {
-                    throw new Exception();
-                }
-                cityFromJobAd = city;
-
+                jobAdFromQueue?.Cities?.RemoveAll(x => x.Name == city.Name);
+                jobAdFromQueue?.Cities?.Add(city);
 
                 // w pętli, dopóki miasto się zgadza w priority queue
                 // policzyć ile razy ma być każde miasto, zapisać w tabeli pętla lecąca po tabeli i pętla w środku tyle razy ile ma być
@@ -105,5 +99,6 @@ public class ComulatorController(IComulator comulator, IJobAdRepository jobAdRep
                 }
             }
         }
+        return justJoinItJobs;
     }
 }
