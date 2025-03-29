@@ -6,7 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>WebApi</RootNamespace>
     <UserSecretsId>3234e591-6a21-4e09-b7d5-fbe5bd3eb877</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
