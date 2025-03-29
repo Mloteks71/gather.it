@@ -12,20 +12,28 @@ public class ComulatorController(IComulatorProvider comulatorProvider, IJobAdsSe
     private readonly IComulatorProvider _comulatorProvider = comulatorProvider;
 
     [HttpPost("download")]
-    public async Task<ActionResult> DownloadJobData([FromQuery] string startPage, [FromQuery] string endPage, CancellationToken cancellationToken)
+    public async Task<ActionResult> DownloadJobData([FromQuery] string startPage, [FromQuery] string? endPage, CancellationToken cancellationToken)
     {
         long startPageNumeric;
         long endPageNumeric;
 
         bool startPageParseResult = long.TryParse(startPage, out startPageNumeric);
-        bool endPageParseResult = long.TryParse(endPage, out endPageNumeric);
+        bool endPageParseResult = true;
+
+        if (endPage is not null) {
+            endPageParseResult = long.TryParse(endPage, out endPageNumeric);
+        } 
+        else
+        {
+            endPageNumeric = startPageNumeric;
+        }
 
         if (!startPageParseResult || !endPageParseResult)
             BadRequest("Invalid parameters");
 
         List<JobAd> jobAds = await _comulatorProvider.Get(ComulatorType.JustJoinIt).Comulate((options) => {
-            options.StartPage = 1;
-            options.EndPage = 10;
+            options.StartPage = startPageNumeric;
+            options.EndPage = endPageNumeric;
         });
 
         await jobAdsService.Save(jobAds, cancellationToken);
