@@ -35,6 +35,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    await using (var serviceScope = app.Services.CreateAsyncScope())
+    using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<GatherItDbContext>())
+    {
+        dbContext.Database.Migrate();
+    }
 }
 
 app.UseHttpsRedirection();
